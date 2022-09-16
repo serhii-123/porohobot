@@ -10,19 +10,44 @@ bot.onText(/Антидрочер, старт/, async (msg) => {
     let chatId = msg.chat.id;
     let userData = await findUserDataByUserId(userId, usersData);
 
-    console.log(userData);
     if(userData == undefined) {
         usersData.push({
             userId,
             milliseconds: Date.now()
         });
 
-        bot.sendMessage(msg.chat.id, 'Ок');
+        bot.sendMessage(chatId, 'Данные записаны');
     }
     else {
         bot.sendMessage(chatId, 'Ошибка!');
     }
+    console.log(usersData);
 });
+
+bot.onText(/Антидрочер, сброс/, async (msg) => {
+    let userId = msg.from.id;
+    let chatId = msg.chat.id;
+    let userData = await findUserDataByUserId(userId, usersData);
+
+    if(userData == undefined) {
+        bot.sendMessage(chatId, 'Ошибка!');
+    } else {
+        await resetTime(userId, usersData);
+        bot.sendMessage(chatId, 'Готово!');
+    }
+    console.log(usersData);
+});
+
+bot.onText(/Антидрочер, дни/, (msg) => {
+    let userId = msg.from.id;
+    let chatId = msg.chat.id;
+
+    //ось тут треба доробити
+});
+
+
+
+
 
 async function findUserDataByUserId(userId, usersData) {
     let userData;
@@ -34,4 +59,12 @@ async function findUserDataByUserId(userId, usersData) {
     });
 
     return userData;
+}
+
+async function resetTime(userId, usersData) {
+    let userData = await findUserDataByUserId(userId, usersData);
+    console.log(userData);
+
+    userData.milliseconds = Date.now();
+    console.log(userData.milliseconds);
 }
