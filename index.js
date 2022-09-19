@@ -3,7 +3,12 @@ const token = '5505120300:AAEELFnC4KpXvhFe--4eIwSy6b5Am74a6PA';
 const bot = new TelegramBot(token, {
     polling: true
 });
-const usersData = [];
+const usersData = [
+    { 
+        userId: 487039484, 
+        milliseconds: 1663313227093 
+    }
+];
 
 bot.onText(/Антидрочер, старт/, async (msg) => {
     let userId = msg.from.id;
@@ -21,7 +26,6 @@ bot.onText(/Антидрочер, старт/, async (msg) => {
     else {
         bot.sendMessage(chatId, 'Ошибка!');
     }
-    console.log(usersData);
 });
 
 bot.onText(/Антидрочер, сброс/, async (msg) => {
@@ -35,14 +39,22 @@ bot.onText(/Антидрочер, сброс/, async (msg) => {
         await resetTime(userId, usersData);
         bot.sendMessage(chatId, 'Готово!');
     }
-    console.log(usersData);
 });
 
-bot.onText(/Антидрочер, дни/, (msg) => {
+bot.onText(/Антидрочер, сутки/, async (msg) => {
     let userId = msg.from.id;
     let chatId = msg.chat.id;
+    let userData = await findUserDataByUserId(userId, usersData);
 
-    //ось тут треба доробити
+    if(userData == undefined) {
+        bot.sendMessage(chatId, 'Ошибка!');
+    } else {
+        let {milliseconds: userMilliseconds} = userData;
+        console.log(userMilliseconds);
+        let difference = Date.now() - userMilliseconds;
+        let days = Math.trunc(difference / 1000 / 60 / 60 / 24);
+        bot.sendMessage(chatId, `Кол-во прошедших суток: ${days}`);
+    }
 });
 
 
@@ -63,8 +75,6 @@ async function findUserDataByUserId(userId, usersData) {
 
 async function resetTime(userId, usersData) {
     let userData = await findUserDataByUserId(userId, usersData);
-    console.log(userData);
 
     userData.milliseconds = Date.now();
-    console.log(userData.milliseconds);
 }
