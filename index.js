@@ -4,11 +4,14 @@ const bot = new TelegramBot(token, {
     polling: true
 });
 const usersData = [
-    { 
-        userId: 487039484, 
-        milliseconds: 1663313227093 
-    }
+    
 ];
+
+bot.onText(/help/, async (msg) => {
+    let chatId = msg.chat.id;
+
+    bot.sendMessage(chatId, 'Amogus');
+});
 
 bot.onText(/Антидрочер, старт/, async (msg) => {
     let userId = msg.from.id;
@@ -42,6 +45,7 @@ bot.onText(/Антидрочер, сброс/, async (msg) => {
 });
 
 bot.onText(/Антидрочер, сутки/, async (msg) => {
+    console.log('sus');
     let userId = msg.from.id;
     let chatId = msg.chat.id;
     let userData = await findUserDataByUserId(userId, usersData);
@@ -78,3 +82,5 @@ async function resetTime(userId, usersData) {
 
     userData.milliseconds = Date.now();
 }
+
+bot.on('polling_error', console.log);
