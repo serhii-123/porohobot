@@ -1,86 +1,41 @@
 const TelegramBot = require('node-telegram-bot-api');
-const token = '5505120300:AAEELFnC4KpXvhFe--4eIwSy6b5Am74a6PA';
+const token = '5829327319:AAHp6mSLE4A3Y7ZJMm1ogp5YvlBCG9LzY4M';
+const phrases = require('./phrases.json');
+const getRandomElement = require('./getRandomElement');
 const bot = new TelegramBot(token, {
     polling: true
 });
-const usersData = [
-    
-];
 
-bot.onText(/help/, async (msg) => {
+
+bot.onText(/зеля|зеленський|зеля|зелі|зеленский|зеле|зели|зелю/i, async (msg) => {
     let chatId = msg.chat.id;
+    let randomPhrase = getRandomElement(phrases);
 
-    bot.sendMessage(chatId, 'Amogus');
+    bot.sendMessage(chatId, randomPhrase);
 });
 
-bot.onText(/Антидрочер, старт/, async (msg) => {
-    let userId = msg.from.id;
+bot.onText(/\/start/, async (msg) => {
     let chatId = msg.chat.id;
-    let userData = await findUserDataByUserId(userId, usersData);
+    let message = 'Привіт, я порохобот\nЯ реагую на деякі слова та надсилаю смішні пасти\nДля відправки паст у чатах використовуйте наступну команду: @poroh0_bot паста'
+    bot.sendMessage(chatId, message);
+});
 
-    if(userData == undefined) {
-        usersData.push({
-            userId,
-            milliseconds: Date.now()
+bot.on('inline_query', async (query) => {
+    let queryText = query.query;
+    let phrase = getRandomElement(phrases);
+    let arrForAnswer = [{
+        id: '0',
+        type: 'article',
+        title: 'Порохоботська паста',
+        description: '',
+        message_text: phrase
+    }];
+
+    if(queryText == 'паста') {
+        bot.answerInlineQuery(query.id, arrForAnswer, {
+            cache_time: 0
         });
-
-        bot.sendMessage(chatId, 'Данные записаны');
-    }
-    else {
-        bot.sendMessage(chatId, 'Ошибка!');
     }
 });
-
-bot.onText(/Антидрочер, сброс/, async (msg) => {
-    let userId = msg.from.id;
-    let chatId = msg.chat.id;
-    let userData = await findUserDataByUserId(userId, usersData);
-
-    if(userData == undefined) {
-        bot.sendMessage(chatId, 'Ошибка!');
-    } else {
-        await resetTime(userId, usersData);
-        bot.sendMessage(chatId, 'Готово!');
-    }
-});
-
-bot.onText(/Антидрочер, сутки/, async (msg) => {
-    console.log('sus');
-    let userId = msg.from.id;
-    let chatId = msg.chat.id;
-    let userData = await findUserDataByUserId(userId, usersData);
-
-    if(userData == undefined) {
-        bot.sendMessage(chatId, 'Ошибка!');
-    } else {
-        let {milliseconds: userMilliseconds} = userData;
-        console.log(userMilliseconds);
-        let difference = Date.now() - userMilliseconds;
-        let days = Math.trunc(difference / 1000 / 60 / 60 / 24);
-        bot.sendMessage(chatId, `Кол-во прошедших суток: ${days}`);
-    }
-});
-
-
-
-
-
-async function findUserDataByUserId(userId, usersData) {
-    let userData;
-
-    usersData.forEach(el => {
-        if(el.userId == userId) {
-            userData = el;
-        };
-    });
-
-    return userData;
-}
-
-async function resetTime(userId, usersData) {
-    let userData = await findUserDataByUserId(userId, usersData);
-
-    userData.milliseconds = Date.now();
-}
 
 bot.on('polling_error', console.log);
