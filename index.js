@@ -7,7 +7,6 @@ const getRandomElement = require('./getRandomElement');
 const bot = new TelegramBot(token, {
     polling: true
 });
-const fileNames = fs.readdirSync(__dirname + '/images');
 
 
 
