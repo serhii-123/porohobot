@@ -1,18 +1,15 @@
+const fs = require('fs');
 const TelegramBot = require('node-telegram-bot-api');
 const token = '5829327319:AAHp6mSLE4A3Y7ZJMm1ogp5YvlBCG9LzY4M';
-const phrases = require('./phrases.json');
+const answerArrWithPasts = require('./answerArrWithPasts.json');
+const answerArrWithStickers = require('./answerArrWithStickers.json');
 const getRandomElement = require('./getRandomElement');
 const bot = new TelegramBot(token, {
     polling: true
 });
+const fileNames = fs.readdirSync(__dirname + '/images');
 
 
-bot.onText(/зеля|зеленський|зеля|зелі|зеленский|зеле|зели|зелю/i, async (msg) => {
-    let chatId = msg.chat.id;
-    let randomPhrase = getRandomElement(phrases);
-
-    bot.sendMessage(chatId, randomPhrase);
-});
 
 bot.onText(/\/start/, async (msg) => {
     let chatId = msg.chat.id;
@@ -20,21 +17,30 @@ bot.onText(/\/start/, async (msg) => {
     bot.sendMessage(chatId, message);
 });
 
-bot.on('inline_query', async (query) => {
-    let queryText = query.query;
-    let phrase = getRandomElement(phrases);
-    let arrForAnswer = [{
-        id: '0',
-        type: 'article',
-        title: 'Порохоботська паста',
-        description: '',
-        message_text: phrase
-    }];
+bot.onText(/зеля|зеленський|зеля|зелі|зеленский|зеле|зели|зелю/i, async (msg) => {
+    console.log('used');
 
-    if(queryText == 'паста') {
-        bot.answerInlineQuery(query.id, arrForAnswer, {
-            cache_time: 0
-        });
+    let chatId = msg.chat.id;
+    let randomPhrase = getRandomElement(phrases);
+
+    bot.sendMessage(chatId, randomPhrase);
+});
+
+bot.on('inline_query', async (query) => {
+    console.log('used');
+    let queryText = query.query;
+
+    switch(queryText) {
+        case 'пасти':
+            bot.answerInlineQuery(query.id, answerArrWithPasts, {
+                cache_time: 0
+            });
+            break;
+        case 'стікери':
+            bot.answerInlineQuery(query.id, answerArrWithStickers, {
+                cache_time: 0
+            });
+            break;
     }
 });
 
