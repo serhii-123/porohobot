@@ -1,7 +1,7 @@
-const fs = require('fs');
 const TelegramBot = require('node-telegram-bot-api');
-const token = '5829327319:AAHp6mSLE4A3Y7ZJMm1ogp5YvlBCG9LzY4M';
+const token = '';
 const answerArrWithPasts = require('./answerArrWithPasts.json');
+const phrases = require('./phrases.json');
 const answerArrWithStickers = require('./answerArrWithStickers.json');
 const getRandomElement = require('./getRandomElement');
 const bot = new TelegramBot(token, {
