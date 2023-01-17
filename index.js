@@ -1,8 +1,7 @@
 const TelegramBot = require('node-telegram-bot-api');
 const token = '';
-const answerArrWithPasts = require('./answerArrWithPasts.json');
+const answerArr = require('./answerArr.json');
 const phrases = require('./phrases.json');
-const answerArrWithStickers = require('./answerArrWithStickers.json');
 const getRandomElement = require('./getRandomElement');
 const bot = new TelegramBot(token, {
     polling: true
@@ -27,20 +26,9 @@ bot.onText(/зеля|зеленський|зеля|зелі|зеленский|�
 });
 
 bot.on('inline_query', async (query) => {
-    let queryText = query.query;
-
-    switch(queryText) {
-        case 'пасти':
-            bot.answerInlineQuery(query.id, answerArrWithPasts, {
-                cache_time: 0
-            });
-            break;
-        case 'стікери':
-            bot.answerInlineQuery(query.id, answerArrWithStickers, {
-                cache_time: 0
-            });
-            break;
-    }
+    bot.answerInlineQuery(query.id, answerArr, {
+        cache_time: 0
+    });
 });
 
 bot.on('polling_error', console.log);
