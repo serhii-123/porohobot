@@ -18,7 +18,7 @@ bot.onText(/\/start/, async (msg) => {
     bot.sendMessage(chatId, message);
 });
 
-bot.onText(/зеля|зеленський|зеля|зелі|зеленский|зеле|зели|зелю/i, async (msg) => {
+bot.onText(/зеля|зеленський|зеленського|зеленському|зеленським|зеленский|зеленского|зеленскому|зеленским|/i, async (msg) => {
     let chatId = msg.chat.id;
     let randomPhrase = getRandomElement(phrases);
 
