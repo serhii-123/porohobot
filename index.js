@@ -12,8 +12,7 @@ const bot = new TelegramBot(token, {
 bot.onText(/\/start/, async (msg) => {
     let chatId = msg.chat.id;
     let message = 'Привіт, я порохобот\nЯ реагую на деякі слова та надсилаю смішні пасти'
-                + '\nДля відправки паст у чатах використовуйте наступну команду: @poroh0_bot пасти'
-                + '\nДля відправки стікерів у чатах використовуйте наступну команду: @poroh0_bot стікери';
+                + '\nДля відправки паст у чатах використовуйте наступну команду: @poroh0_bot пасти';
     
     bot.sendMessage(chatId, message);
 });
